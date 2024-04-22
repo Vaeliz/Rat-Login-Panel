@@ -1,3 +1,4 @@
+// This file is part of the software released for the public domain. It, in all it's entirety, was made by Zenivex.
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -14,13 +15,39 @@ public class Program
 {
     private static Dictionary<string, User> users = new Dictionary<string, User>();
 
+    private static void AddSession(string username)
+    {
+        if (!sessions.ContainsKey(username))
+        {
+            sessions[username] = users[username]; 
+        }
+    }
+
+
+    private static bool IsLoggedIn(string username)
+    {
+        return sessions.ContainsKey(username);
+    }
+
+
+    private static void RemoveSession(string username)
+    {
+        if (sessions.ContainsKey(username))
+        {
+            sessions.Remove(username); 
+        }
+    }
+
+    public static void Main()
+    {
     public static void Main()
     {
         while (true)
         {
             Console.WriteLine("1. Create account");
             Console.WriteLine("2. Login");
-            Console.WriteLine("3. Exit");
+            Console.WriteLine("3. Logout");
+            Console.WriteLine("4. Check login status");
             Console.Write("Select an option: ");
             var option = Console.ReadLine();
 
@@ -34,11 +61,47 @@ public class Program
             }
             else if (option == "3")
             {
-                break;
+                Logout();
+            }
+            else if (option == "4")
+            {
+                CheckLoginStatus();
             }
         }
     }
 
+    private static void Logout()
+    {
+        Console.Write("Enter your username: ");
+        var username = Console.ReadLine();
+
+        if (IsLoggedIn(username))
+        {
+            RemoveSession(username); 
+            Console.WriteLine("Logged out successfully!");
+        }
+        else
+        {
+            Console.WriteLine("No active session for this user.");
+        }
+    }
+
+
+    private static void CheckLoginStatus()
+    {
+        Console.Write("Enter your username: ");
+        var username = Console.ReadLine();
+
+        if (IsLoggedIn(username))
+        {
+            Console.WriteLine("You are currently logged in.");
+        }
+        else
+        {
+            Console.WriteLine("You are not currently logged in.");
+        }
+    }
+}
     private static void CreateAccount()
     {
         Console.Write("Enter a username: ");
